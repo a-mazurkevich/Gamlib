@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Gamlib.ViewModels"
+             xmlns:pages="clr-namespace:Gamlib.Pages.Base"
+             xmlns:views="clr-namespace:Gamlib.Views"
+             x:Class="Gamlib.Pages.HomePage"
+             x:DataType="viewModels:HomePageViewModel"
+             Title="{Binding Title}">
+
+    <pages:BasePage.Resources>
+        <views:GameCellTemplate x:Key="GameCellTemplate" />
+    </pages:BasePage.Resources>
+
+    <Grid>
+        <CollectionView IsGrouped="False"
+                        SelectionMode="None"
+                        RemainingItemsThreshold="7"
+                        ItemSizingStrategy="MeasureAllItems"
+                        ItemsSource="{Binding Items}"
+                        ItemTemplate="{StaticResource GameCellTemplate}"
+                        RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"/>
+
+        <ActivityIndicator IsVisible="{Binding IsLoadong}"
+                           IsRunning="{Binding IsLoadong}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center" />
+    </Grid>
+</pages:BasePage>
