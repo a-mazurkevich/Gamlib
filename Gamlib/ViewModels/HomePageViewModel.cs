@@ -78,7 +78,7 @@ public class HomePageViewModel : BasePageViewModel
 
             _isFinalPage = result.Next == null;
 
-            if (_page == 1)
+            if (page == 1)
             {
                 Items = new ObservableRangeCollection<GameCellViewModel>(gamesViewModels);
             }

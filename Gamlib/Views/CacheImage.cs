@@ -67,7 +67,6 @@ public class CacheImage : Image
             var token = _sourceCancellationTokenSource.Token;
             var result = await _cacheImageService.GetImageAsync(ImageUrl, token);
             Source = result ?? FailedLoadedImageName;
-            //MainThread.BeginInvokeOnMainThread(() => Source = result ?? FailedLoadedImageName);
         }
         else
         {
