@@ -144,6 +144,8 @@ public class ImageCacheService : IImageCacheService
                                 }
                                 catch (IOException ex)
                                 {
+                                    System.Diagnostics.Debug.WriteLine(
+                            $"Error in {nameof(DownloadAndSaveImageAsync)} - {imageUrl}: {ex.Message}");
                                 }
                             }
 

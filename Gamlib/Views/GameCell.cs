@@ -1,4 +1,5 @@
-﻿using Gamlib.ViewModels;
+﻿using Gamlib.Enums;
+using Gamlib.ViewModels;
 using Gamlib.Views.Base;
 using Microsoft.Maui.Controls.Shapes;
 
@@ -44,6 +45,8 @@ public class GameCell : BaseCell<GameCellViewModel>
         var image = new CacheImage
         {
             Aspect = Aspect.AspectFill,
+            BackgroundColor = Colors.Grey,
+            CacheMode = ImageCache.LocalSave,
         };
         image.SetBinding(CacheImage.ImageUrlProperty, nameof(GameCellViewModel.ImageUrl));
 

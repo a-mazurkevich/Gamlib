@@ -33,25 +33,4 @@ public static class MauiProgram
             .AddViewModels();
         return builder;
     }
-
-//    private static void ConfigureApiServices(IServiceCollection services)
-//    {
-//        var httpClient = new HttpClient { BaseAddress = new Uri("https://api.rawg.io/api") };
-//        services.AddSingleton(RestService.For<IGamesApi>(httpClient));
-//    }
-
-//    private static void ConfigureViewModels(IServiceCollection services)
-//    {
-//        services.AddTransient<HomePageViewModel>();
-//    }
-
-//    private static void ConfigureSharedServices(IServiceCollection services)
-//    {
-//#if ANDROID
-//        services.AddSingleton<IDeviceInfoService, Platforms.Android.Services.DeviceInfoService>();
-//#elif IOS
-//        services.AddSingleton<IDeviceInfoService, Platforms.iOS.Services.DeviceInfoService>();
-//#endif
-//    }
-
 }
