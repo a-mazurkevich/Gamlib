@@ -1,9 +1,12 @@
 ﻿using Gamlib.Services.Interfaces;
+using Microsoft.Maui.Graphics.Platform;
 
 namespace Gamlib.Services;
 
 public class DownloadImageService : IImageCacheService
 {
+    private readonly HttpClient _httpClient = new();
+
     public async Task<ImageSource?> GetImageAsync(string imageUrl, CancellationToken token)
     {
         ImageSource? imageSource = null;
@@ -26,13 +29,17 @@ public class DownloadImageService : IImageCacheService
             {
                 if (!token.IsCancellationRequested)
                 {
-                    var httpClient = new HttpClient();
                     try
                     {
-                        var data = await httpClient.GetByteArrayAsync(imageUri);
+                        var data = await _httpClient.GetByteArrayAsync(imageUri);
                         if (data != null)
                         {
-                            imageSource = ImageSource.FromStream(() => new MemoryStream(data));
+                            var iimage = PlatformImage.FromStream(new MemoryStream(data));
+                            iimage = iimage.Downsize(90, 60);
+
+                            using var stream = iimage.AsStream();
+                            imageSource = ImageSource.FromStream(() => stream);
+                            //imageSource = ImageSource.FromStream(() => new MemoryStream(data));
                         }
                     }
                     catch (Exception ex)
@@ -46,4 +53,3 @@ public class DownloadImageService : IImageCacheService
         return imageSource;
     }
 }
-

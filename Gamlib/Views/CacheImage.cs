@@ -35,6 +35,7 @@ public class CacheImage : Image
     public CacheImage()
     {
         _cacheImageService = ServiceHelper.GetService<DownloadImageService>();
+
     }
 
     private static void OnImageUrlChanged(BindableObject bindable, object oldValue, object newValue)
@@ -65,7 +66,8 @@ public class CacheImage : Image
             _sourceCancellationTokenSource = new CancellationTokenSource();
             var token = _sourceCancellationTokenSource.Token;
             var result = await _cacheImageService.GetImageAsync(ImageUrl, token);
-            MainThread.BeginInvokeOnMainThread(() => Source = result ?? FailedLoadedImageName);
+            Source = result ?? FailedLoadedImageName;
+            //MainThread.BeginInvokeOnMainThread(() => Source = result ?? FailedLoadedImageName);
         }
         else
         {

@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Gamlib.Helpers;
 using Gamlib.Services.Interfaces;
 using Gamlib.Services.Shared;
+using Microsoft.Maui.Graphics.Platform;
 
 namespace Gamlib.Services;
 
@@ -14,6 +15,8 @@ public class ImageCacheService : IImageCacheService
     private const string HTTPS_SCHEME = "https";
 
     private readonly IDeviceInfoService _deviceInfoService;
+
+    private readonly HttpClient _httpClient = new();
 
     private readonly TimeSpan _defaultCacheTime = TimeSpan.FromDays(7);
     private ConcurrentBag<string> _cachedImageNames = new();
@@ -109,10 +112,9 @@ public class ImageCacheService : IImageCacheService
                 {
                     byte[]? data = null;
 
-                    var httpClient = new HttpClient();
                     try
                     {
-                        var response = await httpClient.GetAsync(imageUri);
+                        var response = await _httpClient.GetAsync(imageUri);
                         if (response.IsSuccessStatusCode && response.Content != null)
                         {
                             data = await response.Content.ReadAsByteArrayAsync();
@@ -139,8 +141,13 @@ public class ImageCacheService : IImageCacheService
                             {
                                 try
                                 {
-                                    File.WriteAllBytes(imagePath, data);
+                                    var iimage = PlatformImage.FromStream(new MemoryStream(data));
+                                    iimage = iimage.Downsize(90, 60);
+
+                                    var resizedData = await iimage.AsBytesAsync();
+                                    File.WriteAllBytes(imagePath, resizedData);
                                     result = true;
+                                    //File.WriteAllBytes(imagePath, data);
                                 }
                                 catch (IOException ex)
                                 {
