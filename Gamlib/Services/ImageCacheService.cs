@@ -142,7 +142,7 @@ public class ImageCacheService : IImageCacheService
                                 try
                                 {
                                     var iimage = PlatformImage.FromStream(new MemoryStream(data));
-                                    iimage = iimage.Downsize(90, 60);
+                                    iimage = iimage.Downsize(180);
 
                                     var resizedData = await iimage.AsBytesAsync();
                                     File.WriteAllBytes(imagePath, resizedData);

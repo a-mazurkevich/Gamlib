@@ -35,7 +35,7 @@ public class DownloadImageService : IImageCacheService
                         if (data != null)
                         {
                             var iimage = PlatformImage.FromStream(new MemoryStream(data));
-                            iimage = iimage.Downsize(90, 60);
+                            iimage = iimage.Downsize(180);
 
                             using var stream = iimage.AsStream();
                             imageSource = ImageSource.FromStream(() => stream);
