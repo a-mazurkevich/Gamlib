@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Gamlib.Collections;
 using Gamlib.Commands;
-using Gamlib.Models.Api;
 using Gamlib.Services.Api;
 using Gamlib.ViewModels.Base;
 
@@ -14,12 +12,20 @@ public class HomePageViewModel : BasePageViewModel
 
     private int _page = 1;
     private bool _isFinalPage = false;
-    private TaskCompletionSource<GamesChunkModel>? _taskCompletionSource; 
+
+    private TaskCompletionSource<bool>? _gamesPaginationLoadingSource;
 
     public HomePageViewModel(IGamesApi gamesApiService)
     {
         _gamesApi = gamesApiService;
         Title = "Games";
+    }
+
+    private bool _isRefreshing = false;
+    public bool IsRefreshing
+    {
+        get => _isRefreshing;
+        set => SetProperty(ref _isRefreshing, value);
     }
 
     private ObservableRangeCollection<GameCellViewModel>? _items;
@@ -30,25 +36,43 @@ public class HomePageViewModel : BasePageViewModel
     }
 
     public ICommand LoadMoreCommand => new AsyncCommand(OnLoadMoreCommand,
-        canExecute: () => _taskCompletionSource?.Task.IsCompleted ?? true);
+        canExecute: () => _gamesPaginationLoadingSource?.Task.IsCompleted ?? true);
+
+    public ICommand RefreshCommand => new AsyncCommand(OnRefreshCommand,
+        canExecute: () => _gamesPaginationLoadingSource?.Task.IsCompleted ?? true);
 
     protected override Task LoadData()
     {
         return LoadGames(_page);
     }
 
+    private async Task OnLoadMoreCommand()
+    {
+        if (!_isFinalPage)
+        {
+            await LoadGames(_page + 1);
+        }
+    }
+
+    private async Task OnRefreshCommand()
+    {
+        IsRefreshing = true;
+        await LoadGames(1);
+        IsRefreshing = false;
+    }
+
     private async Task LoadGames(int page)
     {
         try
         {
-            _taskCompletionSource = new TaskCompletionSource<GamesChunkModel>();
+            _gamesPaginationLoadingSource = new TaskCompletionSource<bool>();
 
             var result = await _gamesApi.GetGames(page: page);
 
             var gamesViewModels = result.Results!.Select(g => new GameCellViewModel
             {
                 Title = g.Name ?? "NO DATA",
-                ImageUrl = "",//g.BackgroundImage ?? "",
+                ImageUrl = g.BackgroundImage ?? "",
                 Rating = g.Rating,
             });
 
@@ -64,26 +88,11 @@ public class HomePageViewModel : BasePageViewModel
             }
 
             _page = page;
-            _taskCompletionSource.SetResult(result!);
-
+            _gamesPaginationLoadingSource.SetResult(true!);
         }
         catch (Exception e)
         {
-            System.Diagnostics.Debug.WriteLine($"ERROR.... {e.Message}");
-            _taskCompletionSource?.SetException(e);
-        }
-    }
-
-    private async Task OnLoadMoreCommand()
-    {
-       if (!_isFinalPage)
-        {
-            var p =_page + 1;
-            System.Diagnostics.Debug.WriteLine($"LOADING.... {p}");
-
-            await LoadGames(_page + 1);
-            System.Diagnostics.Debug.WriteLine($"LOADED!!! {p}");
-
+            _gamesPaginationLoadingSource?.SetException(e);
         }
     }
 }

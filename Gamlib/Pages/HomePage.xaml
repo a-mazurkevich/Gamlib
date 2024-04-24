@@ -13,13 +13,17 @@
     </pages:BasePage.Resources>
 
     <Grid>
-        <CollectionView IsGrouped="False"
+        <RefreshView Command="{Binding RefreshCommand}"
+                     IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView IsGrouped="False"
                         SelectionMode="None"
                         RemainingItemsThreshold="7"
                         ItemSizingStrategy="MeasureAllItems"
                         ItemsSource="{Binding Items}"
                         ItemTemplate="{StaticResource GameCellTemplate}"
                         RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"/>
+        </RefreshView>
+        
 
         <ActivityIndicator IsVisible="{Binding IsLoadong}"
                            IsRunning="{Binding IsLoadong}"

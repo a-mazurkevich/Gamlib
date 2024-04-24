@@ -41,11 +41,11 @@ public class GameCell : BaseCell<GameCellViewModel>
             }
         };
 
-        var image = new Image
+        var image = new CacheImage
         {
             Aspect = Aspect.AspectFill,
         };
-        image.SetBinding(Image.SourceProperty, nameof(GameCellViewModel.ImageUrl));
+        image.SetBinding(CacheImage.ImageUrlProperty, nameof(GameCellViewModel.ImageUrl));
 
         cellContent.Add(image, 0, 0);
         cellContent.Add(title, 1, 0);

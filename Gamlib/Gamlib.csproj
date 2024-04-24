@@ -83,6 +83,11 @@
 	  <None Remove="Pages\Base\" />
 	  <None Remove="Collections\" />
 	  <None Remove="Views\Base\" />
+	  <None Remove="Services\Interfaces\" />
+	  <None Remove="Services\Shared\" />
+	  <None Remove="Platforms\iOS\Services\" />
+	  <None Remove="Platforms\Android\Services\" />
+	  <None Remove="Enums\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Pages\" />
@@ -99,5 +104,10 @@
 	  <Folder Include="Pages\Base\" />
 	  <Folder Include="Collections\" />
 	  <Folder Include="Views\Base\" />
+	  <Folder Include="Services\Interfaces\" />
+	  <Folder Include="Services\Shared\" />
+	  <Folder Include="Platforms\iOS\Services\" />
+	  <Folder Include="Platforms\Android\Services\" />
+	  <Folder Include="Enums\" />
 	</ItemGroup>
 </Project>
